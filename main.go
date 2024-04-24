@@ -4,13 +4,17 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"time"
 )
 
 func main() {
+	PORT := os.Getenv("PORT")
+	println("$PORT=", PORT)
+
 	m := http.NewServeMux()
 
-	const addr = ":8080"
+	addr := fmt.Sprintf(":%v", PORT)
 
 	m.HandleFunc("/", handlePage)
 
@@ -29,12 +33,14 @@ func main() {
 func handlePage(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html")
 	w.Header().Set("Access-Control-Allow-Methods", "GET")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	const page = `
 	<html>
-		<body>
-			<p> Hello from the go server </p>
-		</body>
-	</html>
+<head></head>
+<body>
+	<p> Hello from Docker! I'm a Go server. </p>
+</body>
+</html>
 	`
 
 	w.WriteHeader(http.StatusOK)
